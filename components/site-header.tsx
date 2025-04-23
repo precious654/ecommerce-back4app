@@ -37,16 +37,16 @@ export function SiteHeader() {
     }
   }, []);
 
-  // Logout function
   const handleLogout = async () => {
-    try {
-      await Parse.User.logOut();
-      setIsLoggedIn(false);
-      setIsSeller(false);
-      router.push("/auth/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
+    const sessionToken = Parse.User.current()?.get("SessionToken");
+    if (sessionToken) {
+      await Parse.User.become(sessionToken); // ensures proper context
+      await Parse.Cloud.run("logoutUser"); // delete the session on server
     }
+    await Parse.User.logOut(); // clear the local session
+    setIsLoggedIn(false);
+    setIsSeller(false);
+    router.push("/auth/login");
   };
 
   return (

@@ -39,32 +39,16 @@ export default function AddProductPage() {
   });
 
   const [images, setImages] = useState<File[]>([]);
-  const [base64Images, setBase64Images] = useState<{ base64: string; fileName: string }[]>([]);
   const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
       const newImages = Array.from(files);
       setImages((prev) => [...prev, ...newImages]);
       alert(`You have added an image to the ${images.length + 1} slot`);
-
-      newImages.forEach((file) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setBase64Images((prev) => [
-            ...prev,
-            {
-              base64: reader.result as string,
-              fileName: file.name,
-            },
-          ]);
-        };
-        reader.readAsDataURL(file);
-      });
     };
   };
 
   console.log("images", images);
-  console.log("base64Images", base64Images);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -89,6 +73,7 @@ export default function AddProductPage() {
         price: number;
         quantityAvailable: number;
         isActive: boolean;
+        imageFiles: Parse.File[];
       }
 
       interface AddProductResponse {
@@ -101,7 +86,7 @@ export default function AddProductPage() {
         price: product.price,
         quantityAvailable: product.stock,
         isActive: product.status === "active",
-        imageFiles: base64Images,
+        imageFiles: images,
       }).then((response) => {
         console.log("Product created:", response.id);
       });

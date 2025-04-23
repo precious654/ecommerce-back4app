@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             <SiteHeader />
-            <div className="flex-1 my-6">{children}</div>
+            <div className="flex-1 mt-8 mb-20">{children}</div>
             <SiteFooter />
           </div>
         </ThemeProvider>

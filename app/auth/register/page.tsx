@@ -27,6 +27,8 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    shippingAddress: "",
+    paymentInfo: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,35 +38,21 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      setIsLoading(false);
-      throw new Error("Passwords do not match");
-    }
-    const user = new Parse.User();
-    user.set("username", formData.name);
-    user.set("password", formData.password);
-    user.set("email", formData.email);
     try {
-      // Sign up the user
-      const signedUpUser: Parse.User = await user.signUp();
-      console.log("User registered:", signedUpUser.id);
+      const response = await Parse.Cloud.run("signupUser", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        shippingAddress: formData.shippingAddress,
+        paymentInfo: formData.paymentInfo,
+      });
 
-      // Create a Buyer record linked to the new User
-      const Buyer = Parse.Object.extend("Buyer");
-      const buyer = new Buyer();
-      buyer.set("user", signedUpUser);
-      buyer.set("ShippingAddress","Default Address");
-      buyer.set("PaymentInfo", "No Payment Info Provided");
-
-      const savedBuyer = await buyer.save();
-      console.log("Buyer created:", savedBuyer.id);
-
+      console.log("Signup successful:", response);
       setIsLoading(false);
       router.push("/auth/login");
     } catch (error: any) {
-      console.error("Sign-up failed:", error);
+      console.error("Signup failed:", error);
       setIsLoading(false);
     }
   };
@@ -131,6 +119,28 @@ export default function RegisterPage() {
                   name="confirmPassword"
                   type="password"
                   value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="shippingAddress">Shipping Address</Label>
+                <Input
+                  id="shippingAddress"
+                  name="shippingAddress"
+                  type="text"
+                  value={formData.shippingAddress}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="paymentInfo">Payment Information</Label>
+                <Input
+                  id="paymentInfo"
+                  name="paymentInfo"
+                  type="text"
+                  value={formData.paymentInfo}
                   onChange={handleChange}
                   required
                 />
