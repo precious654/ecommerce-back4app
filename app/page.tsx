@@ -3,6 +3,15 @@ import { Button } from "@/components/ui/button"
 import { ShoppingBag, ArrowRight } from "lucide-react"
 
 export default function Home() {
+
+  const timeInterval = () => {
+    setInterval(() => {
+      window.location.reload();
+    }, 3000);
+  };
+
+  timeInterval();
+
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">

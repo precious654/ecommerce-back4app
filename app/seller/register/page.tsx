@@ -27,8 +27,6 @@ export default function SellerRegistrationPage() {
     userName: "",
     email: "",
     phone: "",
-    password: "",
-    confirmPassword: "",
     bio: "",
     businessName: "",
   });

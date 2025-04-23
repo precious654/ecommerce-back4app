@@ -39,14 +39,21 @@ export default function AddProductPage() {
   });
 
   const [images, setImages] = useState<File[]>([]);
-  const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const newImages = Array.from(files);
-      setImages((prev) => [...prev, ...newImages]);
-      alert(`You have added an image to the ${images.length + 1} slot`);
-    };
+  const handleImageUpload = async (event) => {
+    event.preventDefault();
+    try {
+      let name = "image.jpg";
+      const File = new Parse.File(name, event.target.files[0]);
+      const photo = await File.save();
+      setImages((prev) => [...prev, photo]);
+      console.log("File saved:", File);
+      alert(`Image uploaded successfully`);
+    } catch (error) {
+      console.error("Error saving file:", error);
+    }
   };
+
+
 
   console.log("images", images);
 
@@ -204,7 +211,7 @@ export default function AddProductPage() {
                       <label htmlFor="image" className="border-2 border-dashed rounded-lg p-2 text-sm text-muted-foreground cursor-pointer hover:border-[#FFFFFF]">
                           Choose File
                       </label>
-                      <input type="file" id="image" className="hidden" onChange={addImage}/>
+                      <input type="file" id="image" className="hidden" onChange={handleImageUpload}/>
                     </div>
                   </div>
                 ))}
