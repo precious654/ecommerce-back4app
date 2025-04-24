@@ -16,7 +16,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     name: string;
     description: string;
     price: number;
-    images?: string[];
+    images?: [];
     quantityAvailable: number; // Added property
   }
 
@@ -52,7 +52,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   // This would be fetched from an API in a real application
 
-  const [selectedImage, setSelectedImage] = useState(product.images?.[0] || "/placeholder.svg")
+  const [selectedImage, setSelectedImage] = useState(product.images?.[0]?.url() || "/placeholder.svg")
 
   return (
     <div className="container px-4 py-8 md:py-12">
@@ -60,7 +60,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         {/* Product Images */}
         <div className="w-full lg:w-1/2 space-y-4">
           <div className="border rounded-lg overflow-hidden">
-            <img src={selectedImage || "/placeholder.svg"} alt={product.name} className="w-full h-auto" />
+            <img src={product.images?.[0]?.url() || "/placeholder.svg"} alt={product.name} className="w-full h-auto" />
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {product?.images?.map((image, index) => (
@@ -72,7 +72,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 onClick={() => setSelectedImage(image)}
               >
                 <img
-                  src={image || "/placeholder.svg"}
+                  src={image?.url() || "/placeholder.svg"}
                   alt={`${product.name} view ${index + 1}`}
                   className="w-20 h-20 object-cover"
                 />

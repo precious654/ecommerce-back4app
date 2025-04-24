@@ -17,7 +17,7 @@ export default function ProductsPage() {
     name: string;
     description: string;
     price: number;
-    image?: string;
+    images?: [];
   }
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -104,7 +104,7 @@ export default function ProductsPage() {
               <Card key={product.id} className="overflow-hidden">
                 <div className="relative">
                   <img
-                    src={product.image || "/placeholder.svg"}
+                    src={product.images?.[0]?.url() || "/placeholder.svg"}
                     alt={product.name}
                     className="w-full h-48 object-cover"
                   />
